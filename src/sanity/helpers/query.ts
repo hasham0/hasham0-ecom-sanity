@@ -13,15 +13,21 @@ const sanityQueries = {
   CATEGORY_QUERY_BY_SLUG: defineQuery(
     `*[_type == "product" && references(*[_type == "category" && slug.current == $slug]._id)] | order(name asc)`,
   ),
-  MY_ORDERS_QUERY: defineQuery(
-    `*[_type == "order" && clerkUserId == $userId] | order(orderData desc) {
+  MY_ORDERS_QUERY:
+    defineQuery(`*[_type == "order" && clerkUserId == $userId]  | order(orderData desc) {
+  ...,
+  products[]{
     ...,
-    products[]->{ 
-      ...
-    },
-    product-> 
-  }`,
-  ),
+    product-> {
+      _id,
+      name,
+      price,
+      currency,
+      image
+    }
+  }
+}
+`),
 };
 
 export const {
